@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta   http-equiv= "Pragma"   content= "no-cache" />
+    <meta   http-equiv= "Cache-Control"   content= "no-cache" />
+    <meta   http-equiv= "Expires"   content= "0" />
+    <title>Title</title>
+    <style>
+        body{padding:0px;margin: 0px;}
+        .loginCon{padding: 30px 50px;width: 300px;border-radius: 5px;margin: 100px auto;border: solid 1px #c5c5c5;}
+        .loginCon h2{margin: 0px; margin-bottom: 20px;padding-bottom:20px;border-bottom:dashed 1px #ccc;text-align: center;}
+        .loginCon input,.loginCon a{height: 30px;line-height: 30px;display: block;}
+        .loginCon p{overflow: hidden}
+        .loginCon p.info{color: #c00;display: none}
+        .loginCon p span,
+        .loginCon p input{float: left;}
+        .loginCon p span{height: 30px;line-height: 30px;width: 100px;color: #555}
+        .loginCon p input{border: solid 1px #c5c5c5;padding: 0px 10px;margin-left: 8px;}
+        .loginCon a {margin: 5px 0px;text-align: center;}
+        .loginCon a.login {border: solid 1px #c5c5c5;display: block;background:#c5c5c5;border-radius:5px;cursor: pointer;}
+        .loginCon a input{width: 100%;cursor: pointer;}
+
+
+    </style>
+</head>
+<body>
+    <div class="loginCon">
+        <h2>Login</h2>
+        <form action="" method="post" autocomplete="off">
+            <p><span>手机号:</span><input type="text" name="mobile" id="mobile" placeholder="输入手机号" autocomplete="off" /></p>
+            <p><span>密&nbsp;码:</span><input type="password" name="password" id="password" placeholder="输入密码" autocomplete="off" /></p>
+            <!--<a class="login"><input type="submit" value="登录"/></a>-->
+            <a class="login">登录</a>
+            <p class="info">提示：返回错误信息</p>
+            <a class="register" href="{{ url_for('register') }}">点击注册</a>
+        </form>
+    </div>
+</body>
+<script src="{{ url_for('static', filename='js/jquery-3.2.1.js') }}"></script>
+<script type="text/javascript">
+    jQuery(".login").click(function () {
+        jQuery.post("{{ url_for('login') }}",{
+            mobile: jQuery("#mobile").val(),
+            password: jQuery("#password").val()
+        },function (data) {
+            console.log(data);
+            if (200 == data.status) {
+                window.location.href = data.url;
+            }else if(404 == data.status){
+                jQuery(".info").css('display','block').html(data.info);
+                setTimeout(function () {
+                    jQuery(".info").slideUp();
+                },2000)
+            }
+        }, "json");
+    });
+</script>
+</html>

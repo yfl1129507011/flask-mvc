@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>
+        body{padding:0px;margin: 0px;}
+        body p{padding:0px;margin: 0px;}
+        .container{background:#f2f2f2;width: 900px;padding:0px 30px;margin: 0px auto;box-sizing: border-box;}
+        .userInfo{text-align: right;padding: 10px 0px;border-bottom: solid 1px #c5c5c5;width: 100%;}
+        .userInfo span.name{color:#c00;font-weight: bold;}
+        .userInfo .logout{color:blue;font-weight: bold;margin-left: 30px;cursor: pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="userInfo"><span>用户：<span class="name">{{mobile}}</span>已经登录</span><a class="logout" href="{{ url_for('logout') }}">[退出]</a></p>
+        <div>
+            <h1>注册用户列表</h1>
+            <!--<a href="/add" style="color: blue;float: right">写博客</a>-->
+        </div>
+        <table cellpadding="0" cellspacing="0" border="1" width="100%">
+            <tr>
+                <td>ID</td><td>昵称</td><td>手机号</td><td>创建时间</td><td>操作</td>
+            </tr>
+            {% if users %}
+            {% for u in users %}
+            <tr>
+                <td>{{u.id}}</td>
+                <td>{{u.nickname}}</td>
+                <td>{{u.mobile}}</td>
+                <td>{{u.reg_time}}</td>
+                <td>
+                    <a href="{{ url_for('userEdit', id=u.id) }}" style="color: blue;" class="edit" >编辑</a>
+                    <a href="javascritp:void(0);" _url="{{ url_for('userEdit', id=u.id) }}"  style="color: blue;" class="del">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+</body>
+<script src="{{ url_for('static', filename='js/jquery-3.2.1.js') }}"></script>
+<script type="text/javascript">
+    jQuery('.container').height(jQuery(window).height());
+    jQuery('.del').click(function(){
+        var that = jQuery(this);
+        var url = that.attr('_url');
+        var res = confirm('确定删除？');
+        if(res){
+            jQuery.post({
+                url: url,
+                // data: {id:id},
+                // dataType: dataType,
+                success: function () {location.reload()},
+                error:function () {alert('系统错误!');}
+            });
+        }else{
+            return
+        }
+
+    })
+</script>
+</html>
