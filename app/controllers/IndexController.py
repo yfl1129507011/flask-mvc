@@ -1,8 +1,7 @@
 from app import app
 from flask import render_template, request, redirect, url_for, session
 from app.models.UserModel import User, db
-from app.common.function import md5
-import json, time
+import json
 
 # 首页
 @app.route('/')
@@ -29,7 +28,7 @@ def login():
             data['status'] = 404
             data['info'] = '账号错误'
             return json.dumps(data)
-        if info.password != md5(password):
+        if not info.checkPassword(password):
             data['status'] = 404
             data['info'] = '密码错误'
             return json.dumps(data)
@@ -59,8 +58,7 @@ def register():
             data['status'] = 404
             data['info'] = '密码不一致'
             return json.dumps(data)
-        reg_time = time.strftime('%Y-%m-%d %H:%M:%S')
-        user = User(nickname, mobile, md5(password), reg_time)
+        user = User(nickname, mobile, password)
         db.session.add(user)
         db.session.commit()
         return json.dumps({'status': 200, 'url': url_for('login')})
