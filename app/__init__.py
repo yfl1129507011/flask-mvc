@@ -2,9 +2,13 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from .controllers.AdminController import admin
 
 app = Flask(__name__)
 app.config.from_object('app.common.config')
+
+# 注册蓝图
+app.register_blueprint(admin, url_prefix='/admin')
 
 # 引入mysql实例
 db = SQLAlchemy(app)
@@ -18,6 +22,3 @@ def pageNotFound(e):
 @app.errorhandler(500)
 def internalServerError(e):
     return '500错误'
-
-# 将controllers下的模块全部导入
-__all__ = ['controllers']
